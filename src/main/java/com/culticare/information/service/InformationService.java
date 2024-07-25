@@ -1,8 +1,11 @@
 package com.culticare.information.service;
 
+import com.culticare.common.exception.CustomException;
+import com.culticare.common.exception.ErrorCode;
 import com.culticare.information.controller.dto.response.EduListResponseDto;
 import com.culticare.information.controller.dto.response.RecruitmentListResponseDto;
 import com.culticare.information.controller.dto.response.WelfareCenterListResponseDto;
+import com.culticare.information.entity.Information;
 import com.culticare.information.entity.Education;
 import com.culticare.information.entity.Recruitment;
 import com.culticare.information.entity.WelfareCenter;
@@ -14,6 +17,8 @@ import com.culticare.information.repository.custom.EducationCustomRepositoryImpl
 import com.culticare.information.repository.custom.RecruitmentCustomRepositoryImpl;
 import com.culticare.information.repository.custom.WelfareCenterCustomRepository;
 import com.culticare.information.repository.custom.WelfareCenterCustomRepositoryImpl;
+import com.culticare.member_scrap_info.entity.MemberScrapInfo;
+import com.culticare.member_scrap_info.repository.MemberScrapInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +39,8 @@ public class InformationService {
     private final EducationRepository educationRepository;
     private final RecruitmentRepository recruitmentRepository;
     private final WelfareCenterRepository welfareCenterRepository;
+
+    private final MemberScrapInfoRepository memberScrapInfoRepository;
 
 
     public EduListResponseDto findEduList(String typeName, Pageable pageable) {
@@ -132,6 +139,41 @@ public class InformationService {
         return recruitmentDtoList;
     }
 
-
     //================= 회원의 정보 스크랩 ==================
+
+    @Transactional
+    public void saveScrapInfo(Long loginMemberId, Long informationId) {
+
+        Information findInformation = informationRepository.findById(informationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_INFORMATION));
+
+        // 이미 스크랩한 정보일 경우
+        if (memberScrapInfoRepository.existsByMemberIdAndInformation(loginMemberId, findInformation)) {
+            throw new CustomException(ErrorCode.EXIST_MEMBER_SCRAP_INFO);
+        }
+
+        findInformation.plusScrapCount();
+
+        MemberScrapInfo memberScrapInfo = MemberScrapInfo.builder()
+                .memberId(loginMemberId)
+                .typeName(findInformation.getTypeName())
+                .information(findInformation)
+                .build();
+
+        memberScrapInfoRepository.save(memberScrapInfo);
+    }
+
+    @Transactional
+    public void deleteScrapInfo(Long loginMemberId, Long informationId) {
+
+        Information findInformation = informationRepository.findById(informationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_INFORMATION));
+
+        // 스크랩한 정보가 아닐 경우
+        if (!memberScrapInfoRepository.existsByMemberIdAndInformation(loginMemberId, findInformation)) {
+            throw new CustomException(ErrorCode.NOT_FOUND_MEMBER_SCRAP_INFO);
+        }
+
+        findInformation.minusScrapCount();
+
+        memberScrapInfoRepository.deleteByMemberIdAndInformation(loginMemberId, findInformation);
+    }
 }
