@@ -1,14 +1,20 @@
 package com.culticare.information.service;
 
 import com.culticare.information.controller.dto.response.EduListResponseDto;
+import com.culticare.information.controller.dto.response.RecruitmentListResponseDto;
+import com.culticare.information.controller.dto.response.WelfareCenterListResponseDto;
 import com.culticare.information.entity.Education;
+import com.culticare.information.entity.Recruitment;
+import com.culticare.information.entity.WelfareCenter;
 import com.culticare.information.repository.EducationRepository;
 import com.culticare.information.repository.InformationRepository;
 import com.culticare.information.repository.RecruitmentRepository;
 import com.culticare.information.repository.WelfareCenterRepository;
 import com.culticare.information.repository.custom.EducationCustomRepositoryImpl;
+import com.culticare.information.repository.custom.RecruitmentCustomRepositoryImpl;
+import com.culticare.information.repository.custom.WelfareCenterCustomRepository;
+import com.culticare.information.repository.custom.WelfareCenterCustomRepositoryImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +29,8 @@ public class InformationService {
 
     private final InformationRepository informationRepository;
     private final EducationCustomRepositoryImpl educationCustomRepositoryImpl;
+    private final WelfareCenterCustomRepositoryImpl welfareCenterCustomRepositoryImpl;
+    private final RecruitmentCustomRepositoryImpl recruitmentCustomRepositoryImpl;
     private final EducationRepository educationRepository;
     private final RecruitmentRepository recruitmentRepository;
     private final WelfareCenterRepository welfareCenterRepository;
@@ -59,4 +67,71 @@ public class InformationService {
 
         return eduDtoList;
     }
+
+    public WelfareCenterListResponseDto findWelfareCenterList(String welfareCenter, Pageable pageable) {
+
+        List<WelfareCenter> results = welfareCenterCustomRepositoryImpl.findAll(pageable);
+        List<WelfareCenterListResponseDto.WelfareCenterDto> welfareCenterDtoList = transferToWelfareCenterListDto(results);
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 클 경우, next =true
+        if (welfareCenterDtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            welfareCenterDtoList.remove(pageable.getPageSize());
+        }
+
+        return WelfareCenterListResponseDto.builder()
+                .nextPage(hasNext)
+                .welfareCenters(welfareCenterDtoList)
+                .build();
+    }
+
+    private List<WelfareCenterListResponseDto.WelfareCenterDto> transferToWelfareCenterListDto(List<WelfareCenter> welfareCenterList) {
+
+        List<WelfareCenterListResponseDto.WelfareCenterDto> welfareCenterDtoList = new ArrayList<>();
+
+        for (WelfareCenter wc : welfareCenterList) {
+
+            WelfareCenterListResponseDto.WelfareCenterDto welfareCenterDto = WelfareCenterListResponseDto.WelfareCenterDto.from(wc);
+            welfareCenterDtoList.add(welfareCenterDto);
+        }
+
+        return welfareCenterDtoList;
+    }
+
+    public RecruitmentListResponseDto findRecruitmentList(String recruitment, Pageable pageable) {
+
+        List<Recruitment> results = recruitmentCustomRepositoryImpl.findAll(pageable);
+        List<RecruitmentListResponseDto.RecruitmentDto> recruitmentDtoList = transferToRecruitmentListDto(results);
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 클 경우, next =true
+        if (recruitmentDtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            recruitmentDtoList.remove(pageable.getPageSize());
+        }
+
+        return RecruitmentListResponseDto.builder()
+                .nextPage(hasNext)
+                .recruitments(recruitmentDtoList)
+                .build();
+    }
+
+    private List<RecruitmentListResponseDto.RecruitmentDto> transferToRecruitmentListDto(List<Recruitment> recruitmentList) {
+
+        List<RecruitmentListResponseDto.RecruitmentDto> recruitmentDtoList = new ArrayList<>();
+
+        for (Recruitment r : recruitmentList) {
+
+            RecruitmentListResponseDto.RecruitmentDto recruitmentDto = RecruitmentListResponseDto.RecruitmentDto.from(r);
+            recruitmentDtoList.add(recruitmentDto);
+        }
+
+        return recruitmentDtoList;
+    }
+
+
+    //================= 회원의 정보 스크랩 ==================
 }
