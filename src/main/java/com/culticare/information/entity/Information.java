@@ -17,5 +17,13 @@ public class Information {
     @Column(name = "information_id")
     private Long id;
     private String typeName; // 정보 종류명. EDU, RECRUIT, WELFARE
+    private Long scrapCount;
 
+    public void plusScrapCount() {
+        this.scrapCount += 1;
+    }
+
+    public void minusScrapCount() {
+        this.scrapCount -= 1;
+    }
 }

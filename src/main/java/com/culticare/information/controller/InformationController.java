@@ -5,15 +5,13 @@ import com.culticare.information.controller.dto.response.WelfareCenterListRespon
 import com.culticare.information.controller.dto.response.EduListResponseDto;
 import com.culticare.information.service.InformationService;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/info")
 @RequiredArgsConstructor
@@ -48,8 +46,21 @@ public class InformationController {
 
     // ======== 회원의 정보 스크랩 =======
 
-//    // 회원-정보 스클랩 관계 등록
-//    @PostMapping()
+    // 회원-정보 스크랩 관계 등록
+    @PostMapping("/scrap/{informationId}")
+    public ResponseEntity<Void> saveScrapInfo(@RequestHeader("memberId") Long loginMemberId,
+                                                 @PathVariable(value = "informationId") Long informationId) {
+        informationService.saveScrapInfo(loginMemberId, informationId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 회원-정보 스크랩 관계 삭제
+    @DeleteMapping("/scrap/{informationId}")
+    public ResponseEntity<Void> deleteScrapInfo(@RequestHeader("memberId") Long loginMemberId,
+                                                @PathVariable(value = "informationId") Long informationId) {
+        informationService.deleteScrapInfo(loginMemberId, informationId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }
