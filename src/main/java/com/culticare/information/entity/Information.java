@@ -16,6 +16,6 @@ public class Information {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "information_id")
     private Long id;
-    private String typeName; // 정보 종류명
+    private String typeName; // 정보 종류명. EDU, RECRUIT, WELFARE
 
 }
