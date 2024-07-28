@@ -2,9 +2,7 @@ package com.culticare.information.service;
 
 import com.culticare.common.exception.CustomException;
 import com.culticare.common.exception.ErrorCode;
-import com.culticare.information.controller.dto.response.EduListResponseDto;
-import com.culticare.information.controller.dto.response.RecruitmentListResponseDto;
-import com.culticare.information.controller.dto.response.WelfareCenterListResponseDto;
+import com.culticare.information.controller.dto.response.*;
 import com.culticare.information.entity.Information;
 import com.culticare.information.entity.Education;
 import com.culticare.information.entity.Recruitment;
@@ -139,6 +137,85 @@ public class InformationService {
         return recruitmentDtoList;
     }
 
+    public EducationResponseDto findEducation(Long loginMemberId, Long informationId) {
+
+        Education findEducation = educationRepository.findById(informationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_INFORMATION));
+
+        boolean isScrapped = false;
+
+        if (memberScrapInfoRepository.existsByMemberIdAndInformation(loginMemberId, findEducation)) {
+            isScrapped = true;
+        }
+
+        return EducationResponseDto.builder()
+                .id(findEducation.getId())
+                .title(findEducation.getTitle())
+                .content(findEducation.getContent())
+                .language(findEducation.getLanguage())
+                .applyStartDate(findEducation.getApplyStartDate())
+                .applyEndDate(findEducation.getApplyEndDate())
+                .eduStartDate(findEducation.getEduStartDate())
+                .eduEndDate(findEducation.getEduEndDate())
+                .qualification(findEducation.getQualification())
+                .personnel(findEducation.getPersonnel())
+                .isScrapped(isScrapped)
+                .build();
+    }
+
+    public RecruitmentResponseDto findRecruitment(Long loginMemberId, Long informationId) {
+
+        Recruitment findRecruitment = recruitmentRepository.findById(informationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_INFORMATION));
+
+        boolean isScrapped = false;
+
+        if (memberScrapInfoRepository.existsByMemberIdAndInformation(loginMemberId, findRecruitment)) {
+            isScrapped = true;
+        }
+
+        return RecruitmentResponseDto.builder()
+                .id(findRecruitment.getId())
+                .title(findRecruitment.getTitle())
+                .facility(findRecruitment.getFacility())
+                .language(findRecruitment.getLanguage())
+                .countryOfOrigin(findRecruitment.getCountryOfOrigin())
+                .workingArea(findRecruitment.getWorkingArea())
+                .workingDays(findRecruitment.getWorkingDays())
+                .startTime(findRecruitment.getStartTime())
+                .endTime(findRecruitment.getEndTime())
+                .weekendWorkStatus(findRecruitment.getWeekendWorkStatus())
+                .wage(findRecruitment.getWage())
+                .recruitNumber(findRecruitment.getRecruitNumber())
+                .postDate(findRecruitment.getPostDate())
+                .workType(findRecruitment.getWorkType())
+                .workWelfare(findRecruitment.getWorkWelfare())
+                .isScrapped(isScrapped)
+                .build();
+    }
+
+    public WelfareCenterResponseDto findWelfareCenter(Long loginMemberId, Long informationId) {
+
+        WelfareCenter findWelfareCenter = welfareCenterRepository.findById(informationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_INFORMATION));
+
+        boolean isScrapped = false;
+
+        if (memberScrapInfoRepository.existsByMemberIdAndInformation(loginMemberId, findWelfareCenter)) {
+            isScrapped = true;
+        }
+
+        return WelfareCenterResponseDto.builder()
+                .id(findWelfareCenter.getId())
+                .name(findWelfareCenter.getName())
+                .facilityType(findWelfareCenter.getFacilityType())
+                .typeDetail(findWelfareCenter.getTypeDetail())
+                .manager(findWelfareCenter.getManager())
+                .regionName(findWelfareCenter.getRegionName())
+                .address(findWelfareCenter.getAddress())
+                .telephone(findWelfareCenter.getTelephone())
+                .zipCode(findWelfareCenter.getZipCode())
+                .isScrapped(isScrapped)
+                .build();
+    }
+
     //================= 회원의 정보 스크랩 ==================
 
     @Transactional
@@ -176,4 +253,5 @@ public class InformationService {
 
         memberScrapInfoRepository.deleteByMemberIdAndInformation(loginMemberId, findInformation);
     }
+
 }
