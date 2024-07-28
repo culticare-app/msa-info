@@ -1,8 +1,6 @@
 package com.culticare.information.controller;
 
-import com.culticare.information.controller.dto.response.RecruitmentListResponseDto;
-import com.culticare.information.controller.dto.response.WelfareCenterListResponseDto;
-import com.culticare.information.controller.dto.response.EduListResponseDto;
+import com.culticare.information.controller.dto.response.*;
 import com.culticare.information.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
@@ -42,6 +40,27 @@ public class InformationController {
 
         RecruitmentListResponseDto result = informationService.findRecruitmentList("RECRUITMENT", pageable);
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // 교육 정보 개별 조회
+    @GetMapping("/education/{informationId}")
+    public ResponseEntity<EducationResponseDto> findEducation(@RequestHeader("memberId") Long loginMemberId,
+                                                              @PathVariable(value = "informationId") Long informationId) {
+        return ResponseEntity.status(HttpStatus.OK).body(informationService.findEducation(loginMemberId, informationId));
+    }
+
+    // 복지센터 정보 개별 조회
+    @GetMapping("/welfare-center/{informationId}")
+    public ResponseEntity<WelfareCenterResponseDto> findWelfareCenter(@RequestHeader("memberId") Long loginMemberId,
+                                                                      @PathVariable(value = "informationId") Long informationId) {
+        return ResponseEntity.status(HttpStatus.OK).body(informationService.findWelfareCenter(loginMemberId, informationId));
+    }
+
+    // 채용공고 개별 조회
+    @GetMapping("/recruitment/{informationId}")
+    public ResponseEntity<RecruitmentResponseDto> findRecruitment(@RequestHeader("memberId") Long loginMemberId,
+                                                                  @PathVariable(value = "informationId") Long informationId) {
+        return ResponseEntity.status(HttpStatus.OK).body(informationService.findRecruitment(loginMemberId, informationId));
     }
 
     // ======== 회원의 정보 스크랩 =======
