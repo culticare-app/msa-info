@@ -20,6 +20,7 @@ public class RecruitmentListResponseDto {
     @Builder
     public static class RecruitmentDto {
 
+        private Long id;
         private String title; //제목
         private String facility; //작성시설
         private String language; //언어
@@ -38,6 +39,7 @@ public class RecruitmentListResponseDto {
         public static RecruitmentDto from(Recruitment recruitment) {
 
             return RecruitmentDto.builder()
+                    .id(recruitment.getId())
                     .title(recruitment.getTitle())
                     .facility(recruitment.getFacility())
                     .language(recruitment.getLanguage())

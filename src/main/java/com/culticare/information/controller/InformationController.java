@@ -81,5 +81,28 @@ public class InformationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 회원의 교육 정보 스크랩 리스트 조회
+    @GetMapping("/scrap/list/education")
+    public ResponseEntity<EduListResponseDto> findScrappedEduList(@RequestHeader("memberId") Long loginMemberId, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        EduListResponseDto result = informationService.findScrappedEduList(loginMemberId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // 회원의 채용공고 스크랩 리스트 조회
+    @GetMapping("/scrap/list/recruitment")
+    public ResponseEntity<RecruitmentListResponseDto> findScrappedRecruitmentList(@RequestHeader("memberId") Long loginMemberId, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        RecruitmentListResponseDto result = informationService.findScrappedRecruitmentList(loginMemberId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // 회원의 복지센터 정보 스크랩 리스트 조회
+    @GetMapping("/scrap/list/welfare-center")
+    public ResponseEntity<WelfareCenterListResponseDto> findScrappedWelfareCenterList(@RequestHeader("memberId") Long loginMemberId, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        WelfareCenterListResponseDto result = informationService.findScrappedWelfareCenterList(loginMemberId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
 }

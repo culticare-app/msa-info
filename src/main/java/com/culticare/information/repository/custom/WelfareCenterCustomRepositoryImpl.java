@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.culticare.information.entity.QEducation.education;
 import static com.culticare.information.entity.QWelfareCenter.welfareCenter;
+import static com.culticare.member_scrap_info.entity.QMemberScrapInfo.memberScrapInfo;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +26,22 @@ public class WelfareCenterCustomRepositoryImpl implements WelfareCenterCustomRep
         List<WelfareCenter> results = queryFactory
                 .select(welfareCenter)
                 .from(welfareCenter)
+                .orderBy(welfareCenter.id.desc())
+                .limit(pageable.getPageSize()+1)
+                .fetch();
+
+        return results;
+    }
+
+    @Override
+    public List<WelfareCenter> findScrappedWelfareCenter(Long loginMemberId, Pageable pageable) {
+
+        List<WelfareCenter> results = queryFactory
+                .select(welfareCenter)
+                .from(welfareCenter)
+                .join(memberScrapInfo)
+                .on(welfareCenter.id.eq(memberScrapInfo.information.id))
+                .where(memberScrapInfo.memberId.eq(loginMemberId))
                 .orderBy(welfareCenter.id.desc())
                 .limit(pageable.getPageSize()+1)
                 .fetch();

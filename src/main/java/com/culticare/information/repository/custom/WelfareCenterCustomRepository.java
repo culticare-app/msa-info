@@ -8,4 +8,5 @@ import java.util.List;
 public interface WelfareCenterCustomRepository {
 
     public List<WelfareCenter> findAll(Pageable pageable);
+    public List<WelfareCenter> findScrappedWelfareCenter(Long loginMemberId, Pageable pageable);
 }
