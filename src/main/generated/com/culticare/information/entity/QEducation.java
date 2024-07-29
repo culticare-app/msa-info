@@ -40,6 +40,9 @@ public class QEducation extends EntityPathBase<Education> {
 
     public final StringPath qualification = createString("qualification");
 
+    //inherited
+    public final NumberPath<Long> scrapCount = _super.scrapCount;
+
     public final StringPath title = createString("title");
 
     //inherited

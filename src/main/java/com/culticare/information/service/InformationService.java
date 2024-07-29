@@ -13,7 +13,6 @@ import com.culticare.information.repository.RecruitmentRepository;
 import com.culticare.information.repository.WelfareCenterRepository;
 import com.culticare.information.repository.custom.EducationCustomRepositoryImpl;
 import com.culticare.information.repository.custom.RecruitmentCustomRepositoryImpl;
-import com.culticare.information.repository.custom.WelfareCenterCustomRepository;
 import com.culticare.information.repository.custom.WelfareCenterCustomRepositoryImpl;
 import com.culticare.member_scrap_info.entity.MemberScrapInfo;
 import com.culticare.member_scrap_info.repository.MemberScrapInfoRepository;
@@ -254,4 +253,60 @@ public class InformationService {
         memberScrapInfoRepository.deleteByMemberIdAndInformation(loginMemberId, findInformation);
     }
 
+    public EduListResponseDto findScrappedEduList(Long loginMemberId, Pageable pageable) {
+
+        List<Education> results = educationCustomRepositoryImpl.findScrappedEducation(loginMemberId, pageable);
+        List<EduListResponseDto.EducationDto> eduDtoList = transferToEduListDto(results);
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 클 경우, next =true
+        if (eduDtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            eduDtoList.remove(pageable.getPageSize());
+        }
+
+        return EduListResponseDto.builder()
+                .nextPage(hasNext)
+                .educations(eduDtoList)
+                .build();
+    }
+
+    public RecruitmentListResponseDto findScrappedRecruitmentList(Long loginMemberId, Pageable pageable) {
+
+        List<Recruitment> results = recruitmentCustomRepositoryImpl.findScrappedRecruitment(loginMemberId, pageable);
+        List<RecruitmentListResponseDto.RecruitmentDto> recruitmentDtoList = transferToRecruitmentListDto(results);
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 클 경우, next =true
+        if (recruitmentDtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            recruitmentDtoList.remove(pageable.getPageSize());
+        }
+
+        return RecruitmentListResponseDto.builder()
+                .nextPage(hasNext)
+                .recruitments(recruitmentDtoList)
+                .build();
+    }
+
+    public WelfareCenterListResponseDto findScrappedWelfareCenterList(Long loginMemberId, Pageable pageable) {
+
+        List<WelfareCenter> results = welfareCenterCustomRepositoryImpl.findScrappedWelfareCenter(loginMemberId, pageable);
+        List<WelfareCenterListResponseDto.WelfareCenterDto> welfareCenterDtoList = transferToWelfareCenterListDto(results);
+
+        boolean hasNext = false;
+
+        // 조회한 결과 개수가 요청한 페이지 사이즈보다 클 경우, next =true
+        if (welfareCenterDtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            welfareCenterDtoList.remove(pageable.getPageSize());
+        }
+
+        return WelfareCenterListResponseDto.builder()
+                .nextPage(hasNext)
+                .welfareCenters(welfareCenterDtoList)
+                .build();
+    }
 }

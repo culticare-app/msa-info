@@ -34,6 +34,9 @@ public class QWelfareCenter extends EntityPathBase<WelfareCenter> {
 
     public final StringPath regionName = createString("regionName");
 
+    //inherited
+    public final NumberPath<Long> scrapCount = _super.scrapCount;
+
     public final StringPath telephone = createString("telephone");
 
     public final StringPath typeDetail = createString("typeDetail");

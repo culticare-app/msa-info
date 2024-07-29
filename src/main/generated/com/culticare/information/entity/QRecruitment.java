@@ -36,6 +36,9 @@ public class QRecruitment extends EntityPathBase<Recruitment> {
 
     public final StringPath recruitNumber = createString("recruitNumber");
 
+    //inherited
+    public final NumberPath<Long> scrapCount = _super.scrapCount;
+
     public final StringPath startTime = createString("startTime");
 
     public final StringPath title = createString("title");

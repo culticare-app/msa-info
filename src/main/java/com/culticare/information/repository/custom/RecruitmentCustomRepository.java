@@ -8,4 +8,5 @@ import java.util.List;
 public interface RecruitmentCustomRepository {
 
     public List<Recruitment> findAll(Pageable pageable);
+    public List<Recruitment> findScrappedRecruitment(Long loginMemberId, Pageable pageable);
 }

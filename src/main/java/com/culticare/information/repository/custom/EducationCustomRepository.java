@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EducationCustomRepository {
     public List<Education> findAll(Pageable pageable);
+    public List<Education> findScrappedEducation(Long loginMemberId, Pageable pageable);
 }

@@ -21,6 +21,8 @@ public class QInformation extends EntityPathBase<Information> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final NumberPath<Long> scrapCount = createNumber("scrapCount", Long.class);
+
     public final StringPath typeName = createString("typeName");
 
     public QInformation(String variable) {

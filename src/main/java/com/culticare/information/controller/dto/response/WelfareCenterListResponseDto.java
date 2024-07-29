@@ -19,6 +19,7 @@ public class WelfareCenterListResponseDto {
     @Builder
     public static class WelfareCenterDto {
 
+        private Long id;
         private String name; // 시설명
         private String facilityType; // 시설종류명
         private String typeDetail; // 시설종류 상세명
@@ -30,6 +31,7 @@ public class WelfareCenterListResponseDto {
 
         public static WelfareCenterDto from(WelfareCenter welfareCenter) {
             return WelfareCenterDto.builder()
+                    .id(welfareCenter.getId())
                     .name(welfareCenter.getName())
                     .facilityType(welfareCenter.getFacilityType())
                     .typeDetail(welfareCenter.getTypeDetail())
